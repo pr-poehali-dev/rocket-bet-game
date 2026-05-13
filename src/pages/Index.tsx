@@ -337,21 +337,19 @@ export default function Index() {
                     }`} />
                   </div>
 
+                  {/* Waiting / crashed state shown in header; flying — коэффициент внутри графика */}
                   <div className="text-center" key={flashKey}>
-                    {phase === 'waiting' ? (
+                    {phase === 'waiting' && (
                       <div className="flex items-center gap-2">
                         <span className="text-muted-foreground font-display text-sm">СТАРТ ЧЕРЕЗ</span>
                         <span className="font-display text-3xl text-primary glow-yellow">{countdown}</span>
                       </div>
-                    ) : phase === 'crashed' ? (
+                    )}
+                    {phase === 'crashed' && (
                       <div className="animate-fade-in">
                         <span className="font-display text-muted-foreground text-sm mr-2">КРЭШ НА</span>
                         <span className="font-display text-3xl text-destructive glow-red">×{multiplier.toFixed(2)}</span>
                       </div>
-                    ) : (
-                      <span className="font-display text-5xl multiplier glow-green text-accent">
-                        ×{multiplier.toFixed(2)}
-                      </span>
                     )}
                   </div>
 
@@ -363,7 +361,7 @@ export default function Index() {
                       </div>
                     ) : (
                       <div className="text-[10px] font-display text-muted-foreground">
-                        {phase === 'waiting' ? `КРЭШ ~×${crashAt.toFixed(2)}` : ''}
+                        {phase === 'waiting' ? `~×${crashAt.toFixed(2)}` : ''}
                       </div>
                     )}
                   </div>

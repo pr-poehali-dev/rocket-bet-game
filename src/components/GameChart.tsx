@@ -123,35 +123,42 @@ export default function GameChart({ multiplier, phase, crashAt, countdown = 5 }:
             transition: crashAnim
               ? 'transform 0.5s ease-in, opacity 0.5s ease-in'
               : 'bottom 0.1s linear',
-            fontSize: '42px',
-            lineHeight: 1,
-            opacity: crashAnim ? 0.3 : 1,
+            width: '56px',
+            height: '56px',
+            opacity: crashAnim ? 0.25 : 1,
             filter: crashed
-              ? 'grayscale(1) brightness(0.5)'
-              : 'drop-shadow(0 0 12px rgba(34,197,94,0.9)) drop-shadow(0 0 24px rgba(34,197,94,0.4))',
+              ? 'grayscale(1) brightness(0.45)'
+              : 'drop-shadow(0 0 10px rgba(34,197,94,0.6))',
             zIndex: 10,
           }}
         >
-          🚀
-        </div>
-      )}
-
-      {/* Хвост огня под ракетой */}
-      {phase === 'flying' && (
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: `${rocketLeft}%`,
-            bottom: `${Math.max(rocketBottom - 8, 2)}%`,
-            transform: 'translateX(-50%)',
-            fontSize: '28px',
-            lineHeight: 1,
-            opacity: 0.85,
-            zIndex: 9,
-            animation: 'flamePulse 0.2s ease-in-out infinite alternate',
-          }}
-        >
-          🔥
+          {/* Android-style rocket SVG */}
+          <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" width="56" height="56">
+            <path d="M36 6 C22 6 14 22 14 38 L14 52 L36 60 L58 52 L58 38 C58 22 50 6 36 6 Z" fill="#9E9E9E"/>
+            <path d="M36 6 C22 6 14 22 14 38 L36 44 L58 38 C58 22 50 6 36 6 Z" fill="#BDBDBD"/>
+            <ellipse cx="36" cy="8" rx="8" ry="10" fill="#E53935"/>
+            <ellipse cx="36" cy="7" rx="5" ry="7" fill="#EF9A9A"/>
+            <circle cx="36" cy="30" r="8" fill="#1565C0"/>
+            <circle cx="36" cy="30" r="6" fill="#1E88E5"/>
+            <ellipse cx="33" cy="27" rx="2.5" ry="1.5" fill="#90CAF9" opacity="0.8"/>
+            <path d="M14 38 L4 54 L18 50 L14 38 Z" fill="#E53935"/>
+            <path d="M14 38 L6 52 L18 50 L14 38 Z" fill="#EF5350"/>
+            <path d="M58 38 L68 54 L54 50 L58 38 Z" fill="#E53935"/>
+            <path d="M58 38 L66 52 L54 50 L58 38 Z" fill="#EF5350"/>
+            <rect x="29" y="56" width="14" height="8" rx="3" fill="#616161"/>
+            {!crashed && (
+              <>
+                <ellipse cx="36" cy="68" rx="7" ry="9" fill="#FF6F00" opacity="0.9">
+                  <animate attributeName="ry" values="9;12;8;11;9" dur="0.18s" repeatCount="indefinite"/>
+                  <animate attributeName="opacity" values="0.9;1;0.8;1;0.9" dur="0.18s" repeatCount="indefinite"/>
+                </ellipse>
+                <ellipse cx="36" cy="66" rx="4" ry="6" fill="#FFCA28">
+                  <animate attributeName="ry" values="6;8;5;7;6" dur="0.15s" repeatCount="indefinite"/>
+                </ellipse>
+                <ellipse cx="36" cy="65" rx="2" ry="3.5" fill="#FFF9C4" opacity="0.9"/>
+              </>
+            )}
+          </svg>
         </div>
       )}
 
@@ -194,7 +201,22 @@ export default function GameChart({ multiplier, phase, crashAt, countdown = 5 }:
       {phase === 'waiting' && (
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-3" style={{ zIndex: 11 }}>
           {/* ракета на старте */}
-          <div style={{ fontSize: '52px', lineHeight: 1, filter: 'drop-shadow(0 0 8px rgba(234,179,8,0.6))' }}>🚀</div>
+          <div style={{ width: 64, height: 64, filter: 'drop-shadow(0 0 10px rgba(234,179,8,0.7))' }}>
+            <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" width="64" height="64">
+              <path d="M36 6 C22 6 14 22 14 38 L14 52 L36 60 L58 52 L58 38 C58 22 50 6 36 6 Z" fill="#9E9E9E"/>
+              <path d="M36 6 C22 6 14 22 14 38 L36 44 L58 38 C58 22 50 6 36 6 Z" fill="#BDBDBD"/>
+              <ellipse cx="36" cy="8" rx="8" ry="10" fill="#E53935"/>
+              <ellipse cx="36" cy="7" rx="5" ry="7" fill="#EF9A9A"/>
+              <circle cx="36" cy="30" r="8" fill="#1565C0"/>
+              <circle cx="36" cy="30" r="6" fill="#1E88E5"/>
+              <ellipse cx="33" cy="27" rx="2.5" ry="1.5" fill="#90CAF9" opacity="0.8"/>
+              <path d="M14 38 L4 54 L18 50 L14 38 Z" fill="#E53935"/>
+              <path d="M14 38 L6 52 L18 50 L14 38 Z" fill="#EF5350"/>
+              <path d="M58 38 L68 54 L54 50 L58 38 Z" fill="#E53935"/>
+              <path d="M58 38 L66 52 L54 50 L58 38 Z" fill="#EF5350"/>
+              <rect x="29" y="56" width="14" height="8" rx="3" fill="#616161"/>
+            </svg>
+          </div>
           <span
             key={countdown}
             className="font-display text-primary glow-yellow"

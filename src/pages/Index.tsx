@@ -269,13 +269,12 @@ export default function Index() {
     v < 1.5 ? 'text-destructive' : v < 3 ? 'text-muted-foreground' : v < 10 ? 'text-primary' : 'text-accent';
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col pb-20">
       {/* Header */}
       <header className="border-b border-border px-4 py-3 flex items-center justify-between sticky top-0 z-50 bg-background/95 backdrop-blur-sm">
         <div className="flex items-center gap-2">
-          <span className="text-xl">🚀</span>
+          <span className="text-lg">🚀</span>
           <span className="font-display text-xl tracking-widest text-foreground">BITCRASH</span>
-          <span className="text-[10px] text-muted-foreground font-display tracking-wider ml-1 hidden sm:block">TON</span>
         </div>
 
         <div className="hidden sm:flex items-center gap-1.5 overflow-hidden max-w-xs">
@@ -287,10 +286,9 @@ export default function Index() {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5 text-sm">
-            <span className="text-muted-foreground font-display text-xs">BAL</span>
-            <span className="font-display text-foreground">{balance.toFixed(2)}</span>
-            <span className="text-muted-foreground text-xs">TON</span>
+          <div className="flex items-center gap-1.5">
+            <span className="font-display text-base text-foreground">{balance.toFixed(2)}</span>
+            <span className="text-muted-foreground text-xs font-display">TON</span>
           </div>
           <button
             onClick={() => setTab('wallet')}
@@ -300,24 +298,6 @@ export default function Index() {
           </button>
         </div>
       </header>
-
-      {/* Nav tabs */}
-      <nav className="border-b border-border px-2 flex gap-0 overflow-x-auto">
-        {TABS.map(t => (
-          <button
-            key={t.id}
-            onClick={() => setTab(t.id)}
-            className={`flex items-center gap-1.5 px-4 py-3 text-xs font-display tracking-wider whitespace-nowrap transition-all border-b-2
-              ${tab === t.id
-                ? 'border-primary text-foreground'
-                : 'border-transparent text-muted-foreground hover:text-foreground'
-              }`}
-          >
-            <Icon name={t.icon} fallback="Circle" size={13} />
-            {t.label}
-          </button>
-        ))}
-      </nav>
 
       {/* Content */}
       <main className="flex-1 p-4 max-w-6xl mx-auto w-full">
@@ -391,10 +371,37 @@ export default function Index() {
         {tab === 'how' && <HowToPlayTab />}
       </main>
 
-      <footer className="border-t border-border px-4 py-3 flex items-center justify-between text-xs text-muted-foreground">
-        <span className="font-display tracking-wide">MOONSHOT © 2026</span>
-        <span>Игра 18+ · Провабли честная</span>
-      </footer>
+      {/* ── Нижний таббар ── */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-t border-border">
+        <div className="max-w-6xl mx-auto flex">
+          {TABS.map(t => (
+            <button
+              key={t.id}
+              onClick={() => setTab(t.id)}
+              className={`flex-1 flex flex-col items-center gap-1 py-3 transition-all
+                ${tab === t.id ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+            >
+              <div className={`relative flex items-center justify-center w-8 h-8 rounded-xl transition-all
+                ${tab === t.id ? 'bg-primary' : 'bg-transparent'}`}>
+                <Icon
+                  name={t.icon}
+                  fallback="Circle"
+                  size={16}
+                  className={tab === t.id ? 'text-primary-foreground' : ''}
+                />
+                {/* Индикатор активной ставки на вкладке Игра */}
+                {t.id === 'game' && activeBet && tab !== 'game' && (
+                  <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-accent rounded-full" />
+                )}
+              </div>
+              <span className={`text-[10px] font-display tracking-wide
+                ${tab === t.id ? 'text-foreground' : 'text-muted-foreground'}`}>
+                {t.label}
+              </span>
+            </button>
+          ))}
+        </div>
+      </nav>
     </div>
   );
 }

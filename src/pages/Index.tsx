@@ -336,16 +336,10 @@ export default function Index() {
                 </div>
 
                 <div key={flashKey}>
-                  {phase === 'waiting' && (
-                    <div className="flex items-center gap-2">
-                      <span className="text-muted-foreground font-display text-xs">СТАРТ ЧЕРЕЗ</span>
-                      <span className="font-display text-2xl text-primary glow-yellow">{countdown}</span>
-                    </div>
-                  )}
                   {phase === 'crashed' && (
                     <div className="animate-fade-in flex items-center gap-2">
                       <span className="font-display text-muted-foreground text-xs">КРЭШ НА</span>
-                      <span className="font-display text-2xl text-destructive glow-red">×{multiplier.toFixed(2)}</span>
+                      <span className="font-display text-xl text-destructive glow-red">×{multiplier.toFixed(2)}</span>
                     </div>
                   )}
                 </div>
@@ -358,7 +352,7 @@ export default function Index() {
               </div>
 
               <div className="flex-1 relative min-h-0">
-                <GameChart multiplier={multiplier} phase={phase} crashAt={crashAt} />
+                <GameChart multiplier={multiplier} phase={phase} crashAt={crashAt} countdown={countdown} />
               </div>
             </div>
 

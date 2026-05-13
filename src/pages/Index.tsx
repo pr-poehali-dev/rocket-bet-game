@@ -274,7 +274,7 @@ export default function Index() {
       <header className="border-b border-border px-4 py-3 flex items-center justify-between sticky top-0 z-50 bg-background/95 backdrop-blur-sm">
         <div className="flex items-center gap-2">
           <span className="text-xl">🚀</span>
-          <span className="font-display text-xl tracking-widest text-foreground">MOONSHOT</span>
+          <span className="font-display text-xl tracking-widest text-foreground">BITCRASH</span>
           <span className="text-[10px] text-muted-foreground font-display tracking-wider ml-1 hidden sm:block">TON</span>
         </div>
 
@@ -323,66 +323,74 @@ export default function Index() {
       <main className="flex-1 p-4 max-w-6xl mx-auto w-full">
         {tab === 'game' && (
           <div className="flex flex-col gap-4">
-            {/* Chart card */}
-            <div className="card-game p-4 flex flex-col" style={{ height: '340px' }}>
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-display tracking-wider text-muted-foreground">РАУНД #{round}</span>
-                  <div className={`w-1.5 h-1.5 rounded-full ${
-                    phase === 'flying' ? 'bg-accent animate-pulse' :
-                    phase === 'waiting' ? 'bg-primary animate-blink' : 'bg-destructive'
-                  }`} />
+            {/* Main game area: chart + controls side by side */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              {/* Chart window */}
+              <div className="lg:col-span-2 card-game p-4 flex flex-col" style={{ height: '380px' }}>
+                {/* Chart header */}
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-display tracking-wider text-muted-foreground">РАУНД #{round}</span>
+                    <div className={`w-1.5 h-1.5 rounded-full ${
+                      phase === 'flying' ? 'bg-accent animate-pulse' :
+                      phase === 'waiting' ? 'bg-primary animate-blink' : 'bg-destructive'
+                    }`} />
+                  </div>
+
+                  <div className="text-center" key={flashKey}>
+                    {phase === 'waiting' ? (
+                      <div className="flex items-center gap-2">
+                        <span className="text-muted-foreground font-display text-sm">СТАРТ ЧЕРЕЗ</span>
+                        <span className="font-display text-3xl text-primary glow-yellow">{countdown}</span>
+                      </div>
+                    ) : phase === 'crashed' ? (
+                      <div className="animate-fade-in">
+                        <span className="font-display text-muted-foreground text-sm mr-2">КРЭШ НА</span>
+                        <span className="font-display text-3xl text-destructive glow-red">×{multiplier.toFixed(2)}</span>
+                      </div>
+                    ) : (
+                      <span className="font-display text-5xl multiplier glow-green text-accent">
+                        ×{multiplier.toFixed(2)}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="text-right">
+                    {activeBet && phase === 'flying' ? (
+                      <div>
+                        <div className="text-[10px] text-muted-foreground font-display">СТАВКА</div>
+                        <div className="font-display text-sm text-primary">{activeBet.amount} TON</div>
+                      </div>
+                    ) : (
+                      <div className="text-[10px] font-display text-muted-foreground">
+                        {phase === 'waiting' ? `КРЭШ ~×${crashAt.toFixed(2)}` : ''}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
-                <div className="text-center" key={flashKey}>
-                  {phase === 'waiting' ? (
-                    <div className="flex items-center gap-2">
-                      <span className="text-muted-foreground font-display text-sm">СТАРТ ЧЕРЕЗ</span>
-                      <span className="font-display text-2xl text-primary glow-yellow">{countdown}</span>
-                    </div>
-                  ) : phase === 'crashed' ? (
-                    <div className="animate-fade-in">
-                      <span className="font-display text-muted-foreground text-sm mr-2">КРЭШ НА</span>
-                      <span className="font-display text-2xl text-destructive glow-red">×{multiplier.toFixed(2)}</span>
-                    </div>
-                  ) : (
-                    <span className="font-display text-4xl multiplier glow-green text-accent">
-                      ×{multiplier.toFixed(2)}
-                    </span>
-                  )}
-                </div>
-
-                <div className="text-right">
-                  {activeBet && phase === 'flying' ? (
-                    <div>
-                      <div className="text-[10px] text-muted-foreground font-display">СТАВКА</div>
-                      <div className="font-display text-sm text-primary">{activeBet.amount} TON</div>
-                    </div>
-                  ) : (
-                    <div className="text-[10px] font-display text-muted-foreground">
-                      {phase === 'waiting' ? `КРЭШ ~×${crashAt.toFixed(2)}` : ''}
-                    </div>
-                  )}
+                {/* Chart */}
+                <div className="flex-1 relative">
+                  <GameChart multiplier={multiplier} phase={phase} crashAt={crashAt} />
                 </div>
               </div>
 
-              <div className="flex-1 relative">
-                <GameChart multiplier={multiplier} phase={phase} crashAt={crashAt} />
+              {/* Bet panel — right column */}
+              <div className="lg:col-span-1">
+                <BetPanel
+                  balance={balance}
+                  phase={phase}
+                  multiplier={multiplier}
+                  activeBet={activeBet}
+                  onBet={handleBet}
+                  onCashout={handleCashout}
+                />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <BetPanel
-                balance={balance}
-                phase={phase}
-                multiplier={multiplier}
-                activeBet={activeBet}
-                onBet={handleBet}
-                onCashout={handleCashout}
-              />
-              <div style={{ height: '280px' }}>
-                <LiveBets bets={liveBets} phase={phase} multiplier={multiplier} />
-              </div>
+            {/* Live bets below chart */}
+            <div style={{ height: '240px' }}>
+              <LiveBets bets={liveBets} phase={phase} multiplier={multiplier} />
             </div>
 
             {/* Mobile recent crashes */}
